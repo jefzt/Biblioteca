@@ -37,9 +37,22 @@ public class Usuario {
         return rol == 1;
         }
 
-        return "Documento: " + documento +
+    @Override
+    public String toString() {
+        String tipoRol = "";
+
+        if (rol == 1) {
+            tipoRol = "ADMINISTRADOR";
+        } else if (rol == 2) {
+            tipoRol = "BIBLIOTECARIO";
+        } else {
+            tipoRol = "LECTOR";
+        }
+
+         return "Documento: " + documento +
                 "Nombre: " + nombreCompleto +
                 "Rol: " + tipoRol;
     }
 }
+
 
