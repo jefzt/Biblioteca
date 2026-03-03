@@ -35,5 +35,11 @@ public class Usuario {
 
     public boolean esAdministrador() {
         return rol == 1;
+        }
+
+        return "Documento: " + documento +
+                "Nombre: " + nombreCompleto +
+                "Rol: " + tipoRol;
     }
 }
+
