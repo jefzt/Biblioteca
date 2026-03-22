@@ -1,28 +1,33 @@
+import java.util.Scanner;
 public class Main {
+
     public static void main(String[] args) {
-    
-        Usuario admin = new Usuario("1001", "Ana Lopez", 1, "1234");
-        Usuario bibliotecario = new Usuario("1002", "Carlos Perez", 2, "1234");
-        Usuario lector = new Usuario("1003", "Maria Gomez", 3, "1234");
+        ConfiguracionSistema config = ConfiguracionSistema.getInstance();
+        System.out.println(config);
 
-        Libro libro1 = new Libro("978-1", "Clean Code", "Robert Martin", 2008);
-        Libro libro2 = new Libro("978-2", "Java Basico", "Juan Diaz", 2020);
+        Scanner   scanner   = new Scanner(System.in);
+        Seguridad seguridad = new Seguridad(scanner);
 
-        System.out.println("USUARIOS");
-        System.out.println(admin);
-        System.out.println(bibliotecario);
-        System.out.println(lector);
+        boolean continuar = true;
+        while (continuar) {
+            boolean loginExitoso = seguridad.iniciarSesion();
 
-        System.out.println("LIBROS");
-        System.out.println(libro1);
-        System.out.println(libro2);
+            if (loginExitoso) {
+                mostrarMenu(seguridad, scanner, config);
+                System.out.print("\n¿Desea iniciar sesion nuevamente? (s/n): ");
+                continuar = scanner.nextLine().equalsIgnoreCase("s");
+            } else {
+                continuar = false;
+            }
+        }
 
-        Prestamo prestamo1 = new Prestamo(
-                lector.getDocumento(),
-                libro1.getIsbn(),
-                "02/03/2026"
-        );
+        System.out.println("\nSistema cerrado. Hasta luego.");
+        scanner.close();
+    }
 
-        libro1.setDisponible(false);   
-}
+    private static void mostrarMenu(Seguridad seguridad,
+                                     Scanner scanner,
+                                     ConfiguracionSistema config) {
+        boolean salir = false;
 
+        while (!salir) {
