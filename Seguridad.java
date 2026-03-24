@@ -29,3 +29,17 @@ public Seguridad(Scanner scanner) {
         libros.add(new Libro("978-2", "El Principito",     "Antoine Exupery", 1943));
         libros.add(new Libro("978-3", "Java Para Novatos", "Herbert Schildt", 2018));
     }
+
+    public boolean iniciarSesion() {
+        int maxIntentos   = ConfiguracionSistema.getInstance().getMaxIntentosLogin();
+        int intentoActual = 0;
+
+        System.out.println("\n==========================================");
+        System.out.println("           INICIO DE SESION");
+        System.out.println("==========================================");
+        System.out.println(" Cuentas de prueba:");
+        System.out.println("  Doc: 1001 | Clave: admin123  | ADMINISTRADOR");
+        System.out.println("  Doc: 1002 | Clave: biblio123 | BIBLIOTECARIO");
+        System.out.println("  Doc: 1003 | Clave: lector123 | LECTOR");
+        System.out.println("==========================================");
+
