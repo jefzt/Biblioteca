@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
-
-
+import java.time.LocalDate; 
 
 public class Seguridad {
 
@@ -11,7 +10,7 @@ public class Seguridad {
     private Usuario             usuarioActivo;
     private Scanner             scanner;
     
-public Seguridad(Scanner scanner) {
+ public Seguridad(Scanner scanner) {
         this.scanner       = scanner;
         this.libros        = new ArrayList<>();
         this.usuarios      = new ArrayList<>();
@@ -34,7 +33,7 @@ public Seguridad(Scanner scanner) {
         int maxIntentos   = ConfiguracionSistema.getInstance().getMaxIntentosLogin();
         int intentoActual = 0;
 
-        System.out.println("\n==========================================");
+        System.out.println("==========================================");
         System.out.println("           INICIO DE SESION");
         System.out.println("==========================================");
         System.out.println(" Cuentas de prueba:");
@@ -42,6 +41,34 @@ public Seguridad(Scanner scanner) {
         System.out.println("  Doc: 1002 | Clave: biblio123 | BIBLIOTECARIO");
         System.out.println("  Doc: 1003 | Clave: lector123 | LECTOR");
         System.out.println("==========================================");
+        while (intentoActual < maxIntentos) {
+            System.out.print("Documento : ");
+            String documento = scanner.nextLine();
+            System.out.print("Contrasena: ");
+            String contrasena = scanner.nextLine();
+
+            Usuario encontrado = buscarUsuario(documento);
+
+            if (encontrado != null && encontrado.getContrasena().equals(contrasena)) {
+                usuarioActivo = encontrado;
+                System.out.println("Bienvenido/a: " + usuarioActivo.getNombreCompleto()
+                                 + " [" + usuarioActivo.getRol() + "]");
+                return true;
+            }
+
+            intentoActual++;
+            int restantes = maxIntentos - intentoActual;
+            if (restantes > 0) {
+                System.out.println("ERROR: Credenciales incorrectas. Intentos restantes: " + restantes);
+            }
+        }
+
+        System.out.println("==========================================");
+        System.out.println(" BLOQUEADO: demasiados intentos fallidos.");
+        System.out.println(" Contacte al administrador.");
+        System.out.println("==========================================");
+        return false;
+    }
         
     public void cerrarSesion() {
         System.out.println("Sesion cerrada. Hasta luego, " + usuarioActivo.getNombreCompleto() + ".");
@@ -63,8 +90,8 @@ public Seguridad(Scanner scanner) {
         String isbn = input("ISBN: ");
         String titulo = input("Titulo: ");
         String autor = input("Autor: ");
-        String anioTxt = input("Anio publicacion: ");
-
+        String añoTxt = input("Año publicacion: ");
+        
         if (isBlank(isbn, titulo, autor)) {
             System.out.println("ERROR: Todos los campos son obligatorios.");
             return;
@@ -75,14 +102,14 @@ public Seguridad(Scanner scanner) {
             return;
         }
 
-        int anio = parseAnio(anioTxt);
+          int año = parseAño(añoTxt);
         
-        if (anio == 0 || anio < 1000 || anio > LocalDate.now().getYear()) {
-            System.out.println("ERROR: El anio no es valido.");
+        if (año == 0 || año < 1000 || año > LocalDate.now().getYear()) {
+          System.out.println("ERROR: El año no es valido.");
             return;
         }
 
-        libros.add(new Libro(isbn, titulo, autor, anio));
+        libros.add(new Libro(isbn, titulo, autor, año));
         System.out.println("OK: Libro registrado -> " + titulo);
     }
 
@@ -333,7 +360,7 @@ public Seguridad(Scanner scanner) {
             .filter(p -> p.getDocumentoUsuario().equals(doc) && p.isActivo())
             .count();
     }
-        // HELPERS
+    // HELPERS
     
     private String input(String msg) {
         System.out.print(msg);
@@ -353,7 +380,7 @@ public Seguridad(Scanner scanner) {
             || r.equals(Usuario.ROL_LECTOR);
     }
 
-    private int parseAnio(String s) {
+    private int parseAño(String s) {
         try {
             return Integer.parseInt(s.trim());
         } catch (NumberFormatException e) {
